@@ -12,15 +12,18 @@ import {get, set} from "enmity/api/settings"
 const Themer = getByProps("updateBackgroundGradientPreset")
 const Stat = getByProps("canUseClientThemes")
 const {ExperimentStore} = getByProps('useAndTrackExposureToUserExperiment')
+const UserSettings = getByProps("setShouldSyncAppearanceSettings")
 
 const Patcher = create('FreeNitroTheme')
 
 const FreeNitroTheme: Plugin = {
     ...manifest,
     onStart() {
-        // ※ shouldSync = false で一応オフにできる
-        // const SyncedUserSettingsStore = getModule((m) => m?.getName?.() === "SelectivelySyncedUserSettingsStore");
-        // SyncedUserSettingsStore.getState()
+        // disable theme sync
+        UserSettings.setShouldSyncAppearanceSettings(false)
+        Patcher.before(UserSettings, "setShouldSyncAppearanceSettings", (self, args, res) => {
+            args[0] = false
+        })
 
         // apply theme on startup before Discord applies it. we can't wait  Discord to load it
         if (get(plugin_name, "theme", -1) > 0) {
@@ -44,6 +47,7 @@ const FreeNitroTheme: Plugin = {
         Patcher.instead(Stat, "canUseClientThemes", (_, args, __) => {
             return true
         })
+
 
         // detect theme selection
         Patcher.after(Themer, "updateMobilePendingThemeIndex", (_, args, __) => {
