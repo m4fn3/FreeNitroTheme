@@ -1,12 +1,16 @@
 {
-   "name": "FreeNitroTheme",
-   "version": "0.0.3",
-   "description": "Use Nitro Themes for FREE",
+   "name": "FreeNitroThemeFix",
+   "version": "1.0.0",
+   "description": "Use Nitro Themes for free",
    "authors": [
       {
          "name": "mafu",
          "id": "519760564755365888"
+      },
+      {
+         "name": "SerStars",
+         "id": "861631850681729045"
       }
    ],
-   "color": "#800080"
+   "color": "#000001"
 }
