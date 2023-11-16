@@ -10,7 +10,7 @@ import {get, set} from "enmity/api/settings"
 // Make sure to disable "sync across clients"
 
 const Themer = getByProps("updateBackgroundGradientPreset")
-const Stat = getByProps("canUseClientThemes")
+const PermStat = getByProps("canUseClientThemes", {defaultExport: false});
 const {ExperimentStore} = getByProps('useAndTrackExposureToUserExperiment')
 const UserSettings = getByProps("setShouldSyncAppearanceSettings")
 
@@ -43,8 +43,12 @@ const FreeNitroTheme: Plugin = {
             }
         })
 
+
+        if (Object.isFrozen(PermStat.default)) {
+            PermStat.default = {...PermStat.default}
+        }
         // make client theme available
-        Patcher.instead(Stat, "canUseClientThemes", (_, args, __) => {
+        Patcher.instead(PermStat.default, "canUseClientThemes", (_, args, __) => {
             return true
         })
 
