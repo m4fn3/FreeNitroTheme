@@ -11,7 +11,6 @@ import {get, set} from "enmity/api/settings"
 
 const Themer = getByProps("updateBackgroundGradientPreset")
 const PermStat = getByProps("canUseClientThemes", {defaultExport: false});
-const {ExperimentStore} = getByProps('useAndTrackExposureToUserExperiment')
 const UserSettings = getByProps("setShouldSyncAppearanceSettings")
 
 const Patcher = create('FreeNitroTheme')
@@ -28,22 +27,6 @@ const FreeNitroTheme: Plugin = {
         // apply theme on startup before Discord applies it. we can't wait  Discord to load it
         if (get(plugin_name, "theme", -1) > 0) {
             Themer.updateBackgroundGradientPreset(get(plugin_name, "theme", -1))
-        }
-
-        // enable client theme experiment
-        Patcher.after(ExperimentStore, 'getUserExperimentDescriptor', (self, [expName], res) => {
-            if (expName === "2023-02_client_themes_mobile" && res?.bucket) {
-                return {
-                    type: 'user',
-                    revision: 1,
-                    population: 0,
-                    bucket: 1,
-                    override: true
-                }
-            }
-        })
-
-
         if (Object.isFrozen(PermStat.default)) {
             PermStat.default = {...PermStat.default}
         }
